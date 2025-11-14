@@ -23,13 +23,211 @@
             padding: 0;
             margin: 0;
         }
+
+        /* Back Button Styles */
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #7689f0 0%, #8556b2 100%);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        .back-button i {
+            font-size: 18px;
+        }
+
+        /* Info Panel Styles */
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .info-panel h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .info-panel p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info-panel .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+
+        .info-panel .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+
+        .toggle-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-info:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .info-panel.hidden {
+            display: none;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .back-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .info-panel {
+                max-width: 250px;
+                padding: 15px;
+                bottom: 80px;
+            }
+
+            .toggle-info {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+        }
     </style>
     <title>Peta Pesebaran Fotocopy di kelurahan Jatimulyo dan Mojolangu Kota malang</title>
 </head>
 
 <body>
-    <div id="map">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Memuat Peta...</div>
     </div>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        <span>Kembali</span>
+    </a>
+
+    <!-- Toggle Info Button -->
+    <button class="toggle-info" id="toggleInfo" onclick="toggleInfoPanel()">
+        <i class="fas fa-info"></i>
+    </button>
+
+    <!-- Info Panel -->
+    <div class="info-panel hidden" id="infoPanel">
+        <h3>📍 Info Peta</h3>
+        <p><strong>Wilayah:</strong> Jatimulyo & Mojolangu</p>
+        <p><strong>Kota:</strong> Malang</p>
+        <div style="margin-top: 15px;">
+            <p style="font-weight: bold; margin-bottom: 8px;">Legenda:</p>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(231,113,72,1.0);"></div>
+                <span style="font-size: 13px;">Usaha Fotokopi</span>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 12px; color: #999;">Klik pada peta untuk info detail</p>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
     <script src="js/qgis2web_expressions.js"></script>
     <script src="js/leaflet.js"></script>
     <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -54,6 +252,19 @@
     <script src="data/JalanKota_9.js"></script>
     <script src="data/TitikUsahaFotokopi_10.js"></script>
     <script>
+        // Toggle Info Panel Function
+        function toggleInfoPanel() {
+            const panel = document.getElementById('infoPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        // Hide loading overlay when page loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 500);
+        });
+
         var highlightLayer;
         function highlightFeature(e) {
             highlightLayer = e.target;
